@@ -83,6 +83,7 @@ function generatePart() {
     let partElement = document.createElement('div');
     partElement.style.backgroundColor = part.color;
     partElement.className = 'part';
+    partElement.innerHTML = `<div class="description">${description}</div>`;
     partElement.onclick = () => addToWorkStation(part);
     conveyorBelt.appendChild(partElement);
     animatePart(partElement);
@@ -90,10 +91,12 @@ function generatePart() {
 
 function animatePart(partElement) {
     let position = 500;
+    partElement.style.position = 'absolute';
+    partElement.style.right = '0px';
     let interval = setInterval(() => {
         if (paused) return;
         position -= 2;
-        partElement.style.left = position + 'px';
+        partElement.style.right = position + 'px';
         if (position <= 0) {
             clearInterval(interval);
             partElement.style.transform = 'scale(0.1)';
