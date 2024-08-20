@@ -102,3 +102,12 @@ button:hover {
     font-size: 12px;
     white-space: nowrap;
 }
+
+.tool-images {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}

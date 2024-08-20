@@ -128,12 +128,16 @@ document.getElementById('deploy').onclick = () => {
             partImage.className = 'part';
             toolImages.appendChild(partImage);
         }
-        toolElement.appendChild(toolImages);
+        document.body.appendChild(toolImages);
 
         setTimeout(() => {
             toolImages.style.transform = 'translateY(100vh)';
             setTimeout(() => toolImages.remove(), 1000);
         }, 3000);
+
+        let score = calculateScore(toolStats);
+        let feedback = getFeedback(score);
+        alert(feedback);
 
         workStation = { handle: null, motor: null, workEnd: null };
         document.querySelectorAll('.slot').forEach(slot => slot.style.backgroundColor = 'white');
@@ -157,4 +161,22 @@ function calculateToolStats(parts) {
         }
     }
     return stats;
+}
+
+function calculateScore(stats) {
+    let total = 0;
+    for (let stat in stats) {
+        total += stats[stat];
+    }
+    return total / Object.keys(stats).length;
+}
+
+function getFeedback(score) {
+    if (score < 40) {
+        return "This tool is quite poor. Better luck next time!";
+    } else if (score < 70) {
+        return "This tool is average. Not bad!";
+    } else {
+        return "This tool is excellent! Great job!";
+    }
 }
