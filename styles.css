@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+#conveyor-belt {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+#work-station {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.slot {
+    width: 50px;
+    height: 50px;
+    border: 1px solid black;
+    margin: 0 10px;
+}
+
+button {
+    margin: 10px;
+}
+
+#tool-list {
+    margin-top: 20px;
+}
