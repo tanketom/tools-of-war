@@ -149,4 +149,12 @@ function generateToolName(parts) {
     return `Tool-${Math.floor(Math.random() * 1000)}`;
 }
 
-function calculateToolStats(parts)
+function calculateToolStats(parts) {
+    let stats = {};
+    for (let part of Object.values(parts)) {
+        for (let stat in part.stats) {
+            stats[stat] = (stats[stat] || 0) + part.stats[stat];
+        }
+    }
+    return stats;
+}
