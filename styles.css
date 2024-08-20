@@ -1,6 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Fredoka One', cursive;
     text-align: center;
+    background-color: #f0f8ff;
+    color: #333;
+}
+
+h1 {
+    color: #ff6347;
 }
 
 #conveyor-belt-container {
@@ -14,10 +22,11 @@ body {
 #conveyor-belt {
     width: 100%;
     height: 70px;
-    background-color: gray;
+    background-color: #d3d3d3;
     display: flex;
     overflow: hidden;
     position: relative;
+    border-radius: 10px;
 }
 
 #black-box {
@@ -26,6 +35,7 @@ body {
     background-color: black;
     position: absolute;
     right: 0;
+    border-radius: 5px;
 }
 
 #work-station {
@@ -40,6 +50,8 @@ body {
     border: 1px solid black;
     margin: 0 10px;
     position: relative;
+    background-color: #fff;
+    border-radius: 5px;
 }
 
 .slot::after {
@@ -54,6 +66,17 @@ body {
 
 button {
     margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff6347;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #ff4500;
 }
 
 #tool-list {
@@ -64,15 +87,7 @@ button {
     width: 50px;
     height: 50px;
     position: relative;
-}
-
-.description {
-    position: absolute;
-    top: -20px;
-    width: 100%;
-    text-align: center;
-    font-size: 12px;
-    color: black;
+    border-radius: 5px;
 }
 
 .speech-bubble {
