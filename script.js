@@ -26,7 +26,7 @@ class WorkEnd extends ToolPart {
 }
 
 let conveyorBelt = document.getElementById('conveyor-belt');
-let workStation = [null, null, null];
+let workStation = { handle: null, motor: null, workEnd: null };
 let paused = false;
 let parts = [];
 
@@ -83,21 +83,21 @@ function generatePart() {
     let partElement = document.createElement('div');
     partElement.style.backgroundColor = part.color;
     partElement.className = 'part';
-    partElement.innerHTML = `<div class="description">${description}</div>`;
+    partElement.innerHTML = `<div class="speech-bubble">${description}</div>`;
     partElement.onclick = () => addToWorkStation(part);
     conveyorBelt.appendChild(partElement);
     animatePart(partElement);
 }
 
 function animatePart(partElement) {
-    let position = 500;
+    let position = 0;
     partElement.style.position = 'absolute';
-    partElement.style.right = '0px';
+    partElement.style.left = '100%';
     let interval = setInterval(() => {
         if (paused) return;
-        position -= 2;
-        partElement.style.right = position + 'px';
-        if (position <= 0) {
+        position += 2;
+        partElement.style.left = `calc(100% - ${position}px)`;
+        if (position >= window.innerWidth) {
             clearInterval(interval);
             partElement.style.transform = 'scale(0.1)';
             setTimeout(() => partElement.remove(), 500);
@@ -106,24 +106,36 @@ function animatePart(partElement) {
 }
 
 function addToWorkStation(part) {
-    for (let i = 0; i < workStation.length; i++) {
-        if (!workStation[i]) {
-            workStation[i] = part;
-            document.getElementById(`slot${i + 1}`).style.backgroundColor = part.color;
-            break;
-        }
-    }
+    if (workStation[part.type]) return;
+    workStation[part.type] = part;
+    document.getElementById(`slot${Object.keys(workStation).indexOf(part.type) + 1}`).style.backgroundColor = part.color;
 }
 
 document.getElementById('deploy').onclick = () => {
-    if (workStation.every(slot => slot)) {
+    if (Object.values(workStation).every(slot => slot)) {
         let toolName = generateToolName(workStation);
         let toolStats = calculateToolStats(workStation);
         let toolList = document.getElementById('tool-list');
         let toolElement = document.createElement('div');
         toolElement.innerText = `${toolName}: ${JSON.stringify(toolStats)}`;
         toolList.appendChild(toolElement);
-        workStation = [null, null, null];
+
+        let toolImages = document.createElement('div');
+        toolImages.className = 'tool-images';
+        for (let part of Object.values(workStation)) {
+            let partImage = document.createElement('div');
+            partImage.style.backgroundColor = part.color;
+            partImage.className = 'part';
+            toolImages.appendChild(partImage);
+        }
+        toolElement.appendChild(toolImages);
+
+        setTimeout(() => {
+            toolImages.style.transform = 'translateY(100vh)';
+            setTimeout(() => toolImages.remove(), 1000);
+        }, 3000);
+
+        workStation = { handle: null, motor: null, workEnd: null };
         document.querySelectorAll('.slot').forEach(slot => slot.style.backgroundColor = 'white');
     }
 };
@@ -139,10 +151,10 @@ function generateToolName(parts) {
 
 function calculateToolStats(parts) {
     let stats = {};
-    parts.forEach(part => {
+    for (let part of Object.values(parts)) {
         for (let stat in part.stats) {
             stats[stat] = (stats[stat] || 0) + part.stats[stat];
         }
-    });
+    }
     return stats;
 }

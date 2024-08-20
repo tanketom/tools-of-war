@@ -12,8 +12,8 @@ body {
 }
 
 #conveyor-belt {
-    width: 500px;
-    height: 50px;
+    width: 100%;
+    height: 70px;
     background-color: gray;
     display: flex;
     overflow: hidden;
@@ -25,7 +25,7 @@ body {
     height: 50px;
     background-color: black;
     position: absolute;
-    left: 0;
+    right: 0;
 }
 
 #work-station {
@@ -39,6 +39,17 @@ body {
     height: 50px;
     border: 1px solid black;
     margin: 0 10px;
+    position: relative;
+}
+
+.slot::after {
+    content: attr(id);
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: gray;
+    font-size: 12px;
 }
 
 button {
@@ -62,4 +73,17 @@ button {
     text-align: center;
     font-size: 12px;
     color: black;
+}
+
+.speech-bubble {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 12px;
+    white-space: nowrap;
 }
