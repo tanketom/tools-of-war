@@ -1,12 +1,14 @@
-const parts = [
-    { type: 'handle', color: 'yellow', stats: { Ergonomics: 50, TriggerFeel: 60, Security: 70 }, description: 'Comfortable handle' },
-    { type: 'motor', color: 'blue', stats: { Stability: 80 }, description: 'Powerful motor' },
-    { type: 'workEnd', color: 'red', stats: { Efficiency: 90 }, description: 'Sharp work end' }
-];
-
 let conveyorBelt = document.getElementById('conveyor-belt');
 let workStation = [null, null, null];
 let paused = false;
+let parts = [];
+
+fetch('tools.json')
+    .then(response => response.json())
+    .then(data => {
+        parts = data;
+        setInterval(generatePart, 1000);
+    });
 
 function generatePart() {
     if (paused) return;
@@ -16,6 +18,21 @@ function generatePart() {
     partElement.className = 'part';
     partElement.onclick = () => addToWorkStation(part);
     conveyorBelt.appendChild(partElement);
+    animatePart(partElement);
+}
+
+function animatePart(partElement) {
+    let position = 0;
+    let interval = setInterval(() => {
+        if (paused) return;
+        position += 2;
+        partElement.style.left = position + 'px';
+        if (position >= 450) {
+            clearInterval(interval);
+            partElement.style.transform = 'scale(0.1)';
+            setTimeout(() => partElement.remove(), 500);
+        }
+    }, 20);
 }
 
 function addToWorkStation(part) {
@@ -58,5 +75,3 @@ function calculateToolStats(parts) {
     });
     return stats;
 }
-
-setInterval(generatePart, 1000);
