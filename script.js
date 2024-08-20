@@ -1,3 +1,30 @@
+class ToolPart {
+    constructor(type, color, stats, description) {
+        this.type = type;
+        this.color = color;
+        this.stats = stats;
+        this.description = description;
+    }
+}
+
+class Handle extends ToolPart {
+    constructor(stats, description) {
+        super('handle', 'yellow', stats, description);
+    }
+}
+
+class Motor extends ToolPart {
+    constructor(stats, description) {
+        super('motor', 'blue', stats, description);
+    }
+}
+
+class WorkEnd extends ToolPart {
+    constructor(stats, description) {
+        super('workEnd', 'red', stats, description);
+    }
+}
+
 let conveyorBelt = document.getElementById('conveyor-belt');
 let workStation = [null, null, null];
 let paused = false;
@@ -10,9 +37,49 @@ fetch('tools.json')
         setInterval(generatePart, 1000);
     });
 
+function generateRandomStats(type) {
+    let stats = {};
+    if (type === 'handle') {
+        stats.Ergonomics = Math.floor(Math.random() * 100) + 1;
+        stats.TriggerFeel = Math.floor(Math.random() * 100) + 1;
+    } else if (type === 'motor') {
+        stats.Stability = Math.floor(Math.random() * 100) + 1;
+        stats.Loyalty = Math.floor(Math.random() * 100) + 1;
+    } else if (type === 'workEnd') {
+        stats.Efficiency = Math.floor(Math.random() * 100) + 1;
+        stats.Recoil = Math.floor(Math.random() * 100) + 1;
+    }
+    return stats;
+}
+
+function getDescription(type, stats) {
+    let descriptions = parts[type + 's'];
+    for (let desc of descriptions) {
+        let match = true;
+        for (let stat in desc) {
+            if (stat !== 'description' && (stats[stat] < desc[stat][0] || stats[stat] > desc[stat][1])) {
+                match = false;
+                break;
+            }
+        }
+        if (match) return desc.description;
+    }
+    return 'Unknown';
+}
+
 function generatePart() {
     if (paused) return;
-    let part = parts[Math.floor(Math.random() * parts.length)];
+    let partType = ['handle', 'motor', 'workEnd'][Math.floor(Math.random() * 3)];
+    let stats = generateRandomStats(partType);
+    let description = getDescription(partType, stats);
+    let part;
+    if (partType === 'handle') {
+        part = new Handle(stats, description);
+    } else if (partType === 'motor') {
+        part = new Motor(stats, description);
+    } else if (partType === 'workEnd') {
+        part = new WorkEnd(stats, description);
+    }
     let partElement = document.createElement('div');
     partElement.style.backgroundColor = part.color;
     partElement.className = 'part';
@@ -22,12 +89,12 @@ function generatePart() {
 }
 
 function animatePart(partElement) {
-    let position = 0;
+    let position = 500;
     let interval = setInterval(() => {
         if (paused) return;
-        position += 2;
+        position -= 2;
         partElement.style.left = position + 'px';
-        if (position >= 450) {
+        if (position <= 0) {
             clearInterval(interval);
             partElement.style.transform = 'scale(0.1)';
             setTimeout(() => partElement.remove(), 500);
@@ -60,6 +127,7 @@ document.getElementById('deploy').onclick = () => {
 
 document.getElementById('pause').onclick = () => {
     paused = !paused;
+    document.getElementById('pause').innerText = paused ? 'START' : 'PAUSE';
 };
 
 function generateToolName(parts) {
